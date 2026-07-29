@@ -1,5 +1,8 @@
 package com.omhvn.tools;
 
+import com.omhvn.tools.api.SolarToolsAPI;
+import com.omhvn.tools.api.SolarToolsAPIImpl;
+import com.omhvn.tools.api.SolarToolsAPIProvider;
 import com.omhvn.tools.commands.GiveToolsCommand;
 import com.omhvn.tools.commands.ReloadCommand;
 import com.omhvn.tools.commands.ToolGuiCommand;
@@ -12,6 +15,7 @@ import com.omhvn.tools.utils.WorldGuardHelper;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SolarTool extends JavaPlugin {
+    private static SolarTool instance;
     private ToolManager toolManager;
     private MessageManager messageManager;
     private BlacklistManager blacklistManager;
@@ -19,9 +23,15 @@ public final class SolarTool extends JavaPlugin {
     private com.omhvn.tools.database.DatabaseManager databaseManager;
     private ToolConfigManager toolConfigManager;
     private ToolGuiCommand toolGuiCommand;
+    private SolarToolsAPI api;
+
+    public static SolarTool getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
+        instance = this;
         this.saveDefaultConfig();
         this.databaseManager = new com.omhvn.tools.database.DatabaseManager(this);
         this.databaseManager.load();
@@ -31,6 +41,9 @@ public final class SolarTool extends JavaPlugin {
         this.worldGuardHelper = new WorldGuardHelper(this);
         this.toolManager = new ToolManager(this);
         this.toolGuiCommand = new ToolGuiCommand(this);
+        this.api = new SolarToolsAPIImpl(this);
+        SolarToolsAPIProvider.register(this.api);
+
         this.getCommand("givetools").setExecutor(new GiveToolsCommand(this));
         this.getCommand("solartool").setExecutor(new ReloadCommand(this));
         this.getCommand("tool").setExecutor(this.toolGuiCommand);
@@ -39,7 +52,6 @@ public final class SolarTool extends JavaPlugin {
         try {
             int pluginId = 32652;
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, pluginId);
-            // Optional: Add custom charts
             metrics.addCustomChart(new org.bstats.charts.SimplePie("chart_id", () -> "My value"));
         } catch (Exception e) {
             this.getLogger().warning("Failed to initialize bStats metrics: " + e.getMessage());
@@ -61,6 +73,7 @@ public final class SolarTool extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        SolarToolsAPIProvider.unregister();
         if (this.databaseManager != null) {
             this.databaseManager.close();
         }
@@ -91,6 +104,9 @@ public final class SolarTool extends JavaPlugin {
         return this.toolGuiCommand;
     }
 
+    public SolarToolsAPI getApi() {
+        return this.api;
+    }
 
     public void reinitializeToolManager() {
         this.toolConfigManager.reload();

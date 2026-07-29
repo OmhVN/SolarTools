@@ -70,7 +70,6 @@ public class ToolListener implements Listener {
             plugin.getLogger().warning("Invalid material in SoilBlocks config: " + blockName);
          }
       }
-      // Periodic tick — remove expired tools from inventories
       SchedulerUtil.runTaskTimer(plugin, () -> {
          for (Player player : Bukkit.getOnlinePlayers()) {
             SchedulerUtil.runTaskAtEntity(plugin, player, () -> checkPlayerInventory(player));
@@ -78,7 +77,6 @@ public class ToolListener implements Listener {
       }, 60L, 60L);
    }
 
-   // ── Helpers ───────────────────────────────────────────────────────────────
 
    private int getRadius(String toolName) {
       org.bukkit.configuration.file.FileConfiguration cfg = plugin.getToolConfigManager().getConfig(toolName);
@@ -90,10 +88,7 @@ public class ToolListener implements Listener {
    }
 
 
-   /**
-    * Determine the BlockFace the player is looking at by using a rayTrace.
-    * Falls back to the dominant axis of the player's view direction.
-    */
+   
    private BlockFace getTargetBlockFace(Player player) {
       BlockFace clicked = lastClickedFace.remove(player.getUniqueId());
       if (clicked != null) {
@@ -105,7 +100,6 @@ public class ToolListener implements Listener {
       if (ray != null && ray.getHitBlockFace() != null) {
          return ray.getHitBlockFace();
       }
-      // Fallback: determine dominant axis of view direction
       org.bukkit.util.Vector dir = player.getLocation().getDirection();
       double absX = Math.abs(dir.getX());
       double absY = Math.abs(dir.getY());
@@ -119,14 +113,7 @@ public class ToolListener implements Listener {
       }
    }
 
-    /**
-     * Get blocks in a 2D plane perpendicular to the given BlockFace,
-     * with optional depth extending in the direction the player is looking.
-     *
-     * For UP/DOWN faces: plane is X-Z, depth extends along Y.
-     * For NORTH/SOUTH faces: plane is X-Y, depth extends along Z.
-     * For EAST/WEST faces: plane is Y-Z, depth extends along X.
-     */
+    
     private List<Block> getBlocksInPlane(Block center, int radius, int depth, BlockFace face, Player player, boolean limitHorizontalAxis) {
        List<Block> blocks = new ArrayList<>();
        BlockFace playerFacing = player != null ? player.getFacing() : BlockFace.NORTH;
@@ -139,7 +126,6 @@ public class ToolListener implements Listener {
                 int dx, dy, dz;
                 switch (face) {
                    case UP -> {
-                      // Looking down → plane is X-Z, depth goes down (-Y)
                       if (limitHorizontalAxis) {
                          if (playerFacing == BlockFace.NORTH || playerFacing == BlockFace.SOUTH) {
                             dx = u; dz = 0;
@@ -152,7 +138,6 @@ public class ToolListener implements Listener {
                       dy = -d;
                    }
                    case DOWN -> {
-                      // Looking up → plane is X-Z, depth goes up (+Y)
                       if (limitHorizontalAxis) {
                          if (playerFacing == BlockFace.NORTH || playerFacing == BlockFace.SOUTH) {
                             dx = u; dz = 0;
@@ -165,19 +150,15 @@ public class ToolListener implements Listener {
                       dy = d;
                    }
                    case NORTH -> {
-                      // Looking south → plane is X-Y, depth goes south (+Z)
                       dx = u; dy = v; dz = d;
                    }
                    case SOUTH -> {
-                      // Looking north → plane is X-Y, depth goes north (-Z)
                       dx = u; dy = v; dz = -d;
                    }
                    case EAST -> {
-                      // Looking west → plane is Y-Z, depth goes west (-X)
                       dy = u; dz = v; dx = -d;
                    }
                    case WEST -> {
-                      // Looking east → plane is Y-Z, depth goes east (+X)
                       dy = u; dz = v; dx = d;
                    }
                    default -> { dx = u; dy = 0; dz = v; }
@@ -189,7 +170,6 @@ public class ToolListener implements Listener {
        return blocks;
     }
 
-   // ── Events ────────────────────────────────────────────────────────────────
 
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event) {
@@ -209,9 +189,7 @@ public class ToolListener implements Listener {
       lastClickedFace.remove(event.getPlayer().getUniqueId());
    }
 
-   /**
-    * Prevent players from picking up expired tools.
-    */
+   
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
    public void onItemPickup(EntityPickupItemEvent event) {
       if (!(event.getEntity() instanceof Player player)) return;
@@ -226,14 +204,11 @@ public class ToolListener implements Listener {
       }
    }
 
-   /**
-    * Prevent players from moving an expired tool in inventory.
-    */
+   
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
    public void onInventoryClick(InventoryClickEvent event) {
       if (!(event.getWhoClicked() instanceof Player player)) return;
 
-      // ── Handle /tool GUI clicks ──
       if (event.getView().getTitle().equals(com.omhvn.tools.commands.ToolGuiCommand.GUI_TITLE)) {
          event.setCancelled(true);
          ItemStack clicked = event.getCurrentItem();
@@ -265,7 +240,6 @@ public class ToolListener implements Listener {
 
          if (!plugin.getToolManager().isCustomTool(clicked)) return;
 
-         // Give the player a customized copy of the tool
          String toolType = plugin.getToolManager().getToolType(clicked);
          if (toolType != null) {
             ItemStack newTool = plugin.getToolManager().createTool(toolType);
@@ -308,7 +282,6 @@ public class ToolListener implements Listener {
       ItemStack cursor = event.getCursor();
       ItemStack current = event.getCurrentItem();
 
-      // Check cursor item
       if (cursor != null && plugin.getToolManager().isCustomTool(cursor)) {
          plugin.getToolManager().updateExpirationDisplay(cursor);
          if (plugin.getToolManager().hasExpired(cursor)) {
@@ -319,7 +292,6 @@ public class ToolListener implements Listener {
          }
       }
 
-      // Check slot item being interacted with
       if (current != null && plugin.getToolManager().isCustomTool(current)) {
          plugin.getToolManager().updateExpirationDisplay(current);
          if (plugin.getToolManager().hasExpired(current)) {
@@ -354,7 +326,6 @@ public class ToolListener implements Listener {
       plugin.getToolManager().updateExpirationDisplay(item);
       boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
 
-      // Remove if expired
       if (!bypass && plugin.getToolManager().hasExpired(item)) {
          player.getInventory().setItem(event.getNewSlot(), null);
          plugin.getMessageManager().sendMessage(player, "tool.expired");
@@ -381,7 +352,6 @@ public class ToolListener implements Listener {
          return;
       }
 
-      // Expired → remove and cancel
       if (!bypass && plugin.getToolManager().hasExpired(item)) {
          player.getInventory().setItemInMainHand(null);
          String expMsg = plugin.getToolManager().isUsesMode(item) ? "tool.uses-depleted" : "tool.expired";
@@ -432,7 +402,6 @@ public class ToolListener implements Listener {
          }
       }
 
-      // ── Consume use for uses-mode tools ──
       if (!bypass && plugin.getToolManager().isUsesMode(item)) {
          if (!plugin.getToolManager().consumeUse(item)) {
             player.getInventory().setItemInMainHand(null);
@@ -472,7 +441,6 @@ public class ToolListener implements Listener {
          return;
       }
 
-      // Expired → remove
       if (!bypass && plugin.getToolManager().hasExpired(item)) {
          if (hand == EquipmentSlot.OFF_HAND) {
             player.getInventory().setItemInOffHand(null);
@@ -517,7 +485,6 @@ public class ToolListener implements Listener {
       }
    }
 
-   // ── Ground item expiry scheduling ─────────────────────────────────────────
 
    private void scheduleGroundItemExpiry(Item groundItem, ItemStack stack) {
       if (!plugin.getToolManager().isCustomTool(stack)) return;
@@ -539,7 +506,6 @@ public class ToolListener implements Listener {
       }, delayTicks);
    }
 
-   // ── Particles ─────────────────────────────────────────────────────────────
 
    private void spawnCustomParticles(Location location, int count) {
       location.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, location, count,
@@ -556,7 +522,6 @@ public class ToolListener implements Listener {
       location.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, count, 0.5, 0.5, 0.5, 0.1);
    }
 
-   // ── Tool handlers ─────────────────────────────────────────────────────────
 
    private void handleDrillBreak(Player player, Block centerBlock) {
       if (unbreakableBlocks.contains(centerBlock.getType())) return;
@@ -635,7 +600,6 @@ public class ToolListener implements Listener {
       boolean isTillable = useConfig ? breakable.contains(centerBlock.getType()) : isTillableBlock(centerBlock.getType());
       if (!isTillable) return;
       int radius = getRadius("hoe");
-      // Hoe always works on a flat horizontal plane (face UP), depth = 1
       int blocksTilled = 0;
       boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
       for (Block block : getBlocksInPlane(centerBlock, radius, 1, BlockFace.UP, player, false)) {
@@ -650,7 +614,6 @@ public class ToolListener implements Listener {
       }
       if (blocksTilled > 0) {
          damageTool(player, player.getInventory().getItemInMainHand(), blocksTilled);
-         // Consume use for uses-mode tools
          boolean bypass2 = player.isOp() || player.hasPermission("solartool.bypass");
          ItemStack hoeItem = player.getInventory().getItemInMainHand();
          if (!bypass2 && plugin.getToolManager().isUsesMode(hoeItem)) {
@@ -688,12 +651,10 @@ public class ToolListener implements Listener {
          return;
       }
 
-      // Vanilla Nether water evaporation check
       if (player.getWorld().isUltraWarm() || player.getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER) {
          player.getWorld().playSound(loc, Sound.BLOCK_FIRE_EXTINGUISH, 0.5F, 2.6F);
          player.getWorld().spawnParticle(Particle.SMOKE, loc.clone().add(0.5, 0.5, 0.5), 8, 0.25, 0.25, 0.25, 0.05);
 
-         // Consume use for uses-mode tools
          ItemStack bucketItem = player.getInventory().getItemInMainHand();
          if (!bypass && plugin.getToolManager().isUsesMode(bucketItem)) {
             if (!plugin.getToolManager().consumeUse(bucketItem)) {
@@ -704,7 +665,6 @@ public class ToolListener implements Listener {
          return;
       }
 
-      // Apply water / waterlogging
       if (targetBlock.getBlockData() instanceof org.bukkit.block.data.Waterlogged waterlogged) {
          if (!waterlogged.isWaterlogged()) {
             waterlogged.setWaterlogged(true);
@@ -720,7 +680,6 @@ public class ToolListener implements Listener {
 
       player.getWorld().playSound(loc, Sound.ITEM_BUCKET_EMPTY, 1.0F, 1.0F);
 
-      // Consume use for uses-mode tools
       ItemStack bucketItem = player.getInventory().getItemInMainHand();
       if (!bypass && plugin.getToolManager().isUsesMode(bucketItem)) {
          if (!plugin.getToolManager().consumeUse(bucketItem)) {
@@ -734,7 +693,6 @@ public class ToolListener implements Listener {
       boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
 
       if (player.isGliding()) {
-         // Elytra boost mode (flying in air with Elytra)
          event.setCancelled(true);
 
          org.bukkit.configuration.file.FileConfiguration cfg = plugin.getToolConfigManager().getConfig("rocket");
@@ -761,7 +719,6 @@ public class ToolListener implements Listener {
             }
          }
       } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-         // Vanilla ground placement: right-clicking on a block spawns firework on block surface
          event.setCancelled(true);
 
          org.bukkit.configuration.file.FileConfiguration cfg = plugin.getToolConfigManager().getConfig("rocket");
@@ -797,10 +754,8 @@ public class ToolListener implements Listener {
             }
          }
       }
-      // If RIGHT_CLICK_AIR while not gliding: do nothing (vanilla rule: cannot place fireworks in mid-air!)
    }
 
-   // ── Utility ───────────────────────────────────────────────────────────────
 
    private void findConnectedLogs(Block block, Set<Block> logs, Set<Location> visited, int depth,
                                    Set<Material> breakable, boolean useConfig) {
@@ -859,7 +814,6 @@ public class ToolListener implements Listener {
       }
    }
 
-   // ── Periodic inventory check ──────────────────────────────────────────────
 
    private void checkPlayerInventory(Player player) {
       boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
@@ -867,7 +821,6 @@ public class ToolListener implements Listener {
          ItemStack item = player.getInventory().getItem(i);
          if (item == null || !plugin.getToolManager().isCustomTool(item)) continue;
 
-         // Always remove expired tools
          if (!bypass && plugin.getToolManager().hasExpired(item)) {
             player.getInventory().setItem(i, null);
             plugin.getMessageManager().sendMessage(player, "tool.expired");

@@ -113,20 +113,14 @@ public class ToolManager {
       updateExpirationDisplay(item);
    }
 
-   // ── Expiration Mode helpers ───────────────────────────────────────────────
 
-   /**
-    * Returns "time" or "uses". Checks PDC first (persisted on item), then falls
-    * back to the tool config file, then defaults to "time".
-    */
+   
    public String getExpirationMode(ItemStack item) {
       if (!isCustomTool(item)) return "time";
       ItemMeta meta = item.getItemMeta();
-      // Check PDC first (value stored on the item itself)
       if (meta.getPersistentDataContainer().has(expirationModeKey, PersistentDataType.STRING)) {
          return meta.getPersistentDataContainer().get(expirationModeKey, PersistentDataType.STRING);
       }
-      // Fallback: read from config
       String type = meta.getPersistentDataContainer().get(toolTypeKey, PersistentDataType.STRING);
       String name = normalizeToolName(type);
       FileConfiguration cfg = plugin.getToolConfigManager().getConfig(name);
@@ -137,7 +131,6 @@ public class ToolManager {
       return "uses".equalsIgnoreCase(getExpirationMode(item));
    }
 
-   // ── Time-based expiration ─────────────────────────────────────────────────
 
    public void startDerivation(ItemStack item, Player player) {
       if (!isCustomTool(item)) return;
@@ -148,7 +141,6 @@ public class ToolManager {
       String mode = getExpirationMode(item);
 
       if ("time".equalsIgnoreCase(mode)) {
-         // Only start time countdown if not already started
          if (!meta.getPersistentDataContainer().has(expirationTimeKey, PersistentDataType.LONG)) {
             String type = meta.getPersistentDataContainer().get(toolTypeKey, PersistentDataType.STRING);
             String name = normalizeToolName(type);
@@ -159,7 +151,6 @@ public class ToolManager {
             item.setItemMeta(meta);
          }
       }
-      // For "uses" mode, remaining_uses is set at creation time, no countdown to start
       updateExpirationDisplay(item);
    }
 
@@ -176,13 +167,8 @@ public class ToolManager {
       return item.getItemMeta().getPersistentDataContainer().get(toolTypeKey, PersistentDataType.STRING);
    }
 
-   // ── Uses-based expiration ─────────────────────────────────────────────────
 
-   /**
-    * Consumes one use from the tool. Returns true if the tool still has uses left.
-    * Returns false if the tool has been depleted (0 uses remaining).
-    * For "time" mode tools, this method does nothing and returns true.
-    */
+   
    public boolean consumeUse(ItemStack item) {
       if (!isCustomTool(item)) return true;
       if (!isUsesMode(item)) return true;
@@ -205,7 +191,6 @@ public class ToolManager {
       return meta.getPersistentDataContainer().get(remainingUsesKey, PersistentDataType.INTEGER);
    }
 
-   // ── Combined expiration check ─────────────────────────────────────────────
 
    public boolean hasExpired(ItemStack item) {
       if (!isCustomTool(item)) return false;
@@ -219,7 +204,6 @@ public class ToolManager {
          }
          return false;
       } else {
-         // time mode
          if (!meta.getPersistentDataContainer().has(expirationTimeKey, PersistentDataType.LONG)) return false;
          long expiresAt = meta.getPersistentDataContainer().get(expirationTimeKey, PersistentDataType.LONG);
          return Instant.now().getEpochSecond() > expiresAt;
@@ -231,7 +215,6 @@ public class ToolManager {
       updateExpirationDisplay(item);
    }
 
-   // ── Lore display ──────────────────────────────────────────────────────────
 
    public void updateExpirationDisplay(ItemStack item) {
       if (!isCustomTool(item)) return;
@@ -243,7 +226,6 @@ public class ToolManager {
          String mode = getExpirationMode(item);
 
          if ("uses".equalsIgnoreCase(mode)) {
-            // ── Uses mode lore ──
             String usesText = msg.getMessage("lore.uses-remaining-text");
             String usesPrefix = msg.getMessage("lore.self-destruct-prefix");
             int remaining;
@@ -258,7 +240,6 @@ public class ToolManager {
             String newLoreLine = translateColorCodes(usesPrefix + usesText + " " + remaining);
             String strippedTarget = ChatColor.stripColor(usesText);
 
-            // Also remove any leftover time-based lore
             String selfDestructText = msg.getMessage("lore.self-destruct-text");
             String strippedTimeTarget = ChatColor.stripColor(selfDestructText);
 
@@ -266,7 +247,6 @@ public class ToolManager {
             for (int i = 0; i < lore.size(); i++) {
                String stripped = ChatColor.stripColor(lore.get(i));
                if (stripped.contains(strippedTimeTarget)) {
-                  // Replace time lore with uses lore
                   lore.set(i, newLoreLine);
                   found = true;
                   break;
@@ -280,7 +260,6 @@ public class ToolManager {
             }
             if (!found) lore.add(newLoreLine);
          } else {
-            // ── Time mode lore (original logic) ──
             String selfDestructText = msg.getMessage("lore.self-destruct-text");
             String timerPrefix      = msg.getMessage("lore.self-destruct-prefix");
             long remainingSeconds;
@@ -314,7 +293,6 @@ public class ToolManager {
       } catch (Exception ignored) {}
    }
 
-   // ── Tool creation ─────────────────────────────────────────────────────────
 
    public ItemStack createTool(String type) {
       String name = normalizeToolName(type);
@@ -347,11 +325,9 @@ public class ToolManager {
       }
       meta.getPersistentDataContainer().set(toolTypeKey, PersistentDataType.STRING, name);
 
-      // Store expiration mode on the item
       String mode = cfg.getString("expiration-mode", "time");
       meta.getPersistentDataContainer().set(expirationModeKey, PersistentDataType.STRING, mode);
 
-      // If uses mode, store max-uses as remaining_uses
       if ("uses".equalsIgnoreCase(mode)) {
          int maxUses = cfg.getInt("max-uses", 500);
          meta.getPersistentDataContainer().set(remainingUsesKey, PersistentDataType.INTEGER, maxUses);

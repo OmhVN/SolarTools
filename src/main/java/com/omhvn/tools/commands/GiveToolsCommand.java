@@ -51,7 +51,6 @@ public class GiveToolsCommand implements CommandExecutor, TabCompleter {
                int customUses = -1;
                if (args.length > 2) {
                   try {
-                     // Strip thousand separators (comma or dot) before parsing
                      String amountStr = args[2].replace(",", "").replace(".", "");
                      amount = Integer.parseInt(amountStr);
                      if (amount <= 0) {
@@ -66,7 +65,6 @@ public class GiveToolsCommand implements CommandExecutor, TabCompleter {
 
                if (args.length > 3) {
                   String arg3 = args[3];
-                  // Check if it's a uses count (e.g., "100u" or "uses:100")
                   if (arg3.toLowerCase().endsWith("u") || arg3.toLowerCase().startsWith("uses:")) {
                      String usesStr = arg3.toLowerCase().endsWith("u")
                            ? arg3.substring(0, arg3.length() - 1)
@@ -82,7 +80,6 @@ public class GiveToolsCommand implements CommandExecutor, TabCompleter {
                         return true;
                      }
                   } else {
-                     // Parse as duration (e.g., "7d", "12h", "30m")
                      customDurationMinutes = this.plugin.getMessageManager().parseDuration(arg3);
                      if (customDurationMinutes < 0L) {
                         this.plugin.getMessageManager().sendMessage(sender, "command.give.invalid-duration");
@@ -93,7 +90,6 @@ public class GiveToolsCommand implements CommandExecutor, TabCompleter {
 
                ItemStack tool = this.plugin.getToolManager().createTool(toolType);
                if (tool != null) {
-                  // Apply custom uses mode
                   if (customUses > 0) {
                      ItemMeta meta = tool.getItemMeta();
                      if (meta != null) {
@@ -105,7 +101,6 @@ public class GiveToolsCommand implements CommandExecutor, TabCompleter {
                         this.plugin.getToolManager().updateExpirationDisplay(tool);
                      }
                   }
-                  // Apply custom time duration
                   else if (customDurationMinutes > 0L && !target.isOp() && !target.hasPermission("solartool.bypass")) {
                      long expiresAtEpoch = Instant.now().getEpochSecond() + customDurationMinutes * 60L;
                      this.plugin.getToolManager().setExpirationEpoch(tool, expiresAtEpoch);

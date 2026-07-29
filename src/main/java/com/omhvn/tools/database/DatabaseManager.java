@@ -4,7 +4,6 @@ import com.omhvn.tools.SolarTool;
 import com.omhvn.tools.utils.SecurityManager;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -15,13 +14,8 @@ import java.util.logging.Level;
 
 public class DatabaseManager {
     private final SolarTool plugin;
-
-    // SQLite - single persistent connection
     private Connection sqliteConnection;
-
-    // MySQL - HikariCP connection pool
     private HikariDataSource hikariDataSource;
-
     private String dbType;
 
     public DatabaseManager(SolarTool plugin) {
@@ -30,7 +24,6 @@ public class DatabaseManager {
     }
 
     public void load() {
-        // Save databases.yml default if not present
         File dbConfigFile = new File(plugin.getDataFolder(), "databases.yml");
         if (!dbConfigFile.exists()) {
             plugin.saveResource("databases.yml", false);
@@ -54,8 +47,6 @@ public class DatabaseManager {
         plugin.getLogger().info("[Database] Connected via " + dbType.toUpperCase() + ".");
     }
 
-    // ── SQLite ────────────────────────────────────────────────────────────────
-
     private void loadSQLite() {
         File dataFile = new File(plugin.getDataFolder(), "database.db");
         if (!dataFile.exists()) {
@@ -75,8 +66,6 @@ public class DatabaseManager {
         }
     }
 
-    // ── MySQL ─────────────────────────────────────────────────────────────────
-
     private void loadMySQL(org.bukkit.configuration.file.YamlConfiguration cfg) {
         String host     = cfg.getString("mysql.host", "localhost");
         int    port     = cfg.getInt   ("mysql.port", 3306);
@@ -87,7 +76,7 @@ public class DatabaseManager {
         boolean useSSL  = cfg.getBoolean("mysql.use-ssl", false);
 
         if (database == null || database.isBlank() || user == null || user.isBlank()) {
-            plugin.getLogger().warning("[Database] MySQL credentials are not configured (database or user is empty). Falling back to SQLite.");
+            plugin.getLogger().warning("[Database] MySQL credentials are not configured. Falling back to SQLite.");
             dbType = "sqlite";
             loadSQLite();
             return;
@@ -108,14 +97,11 @@ public class DatabaseManager {
         try {
             hikariDataSource = new HikariDataSource(hikariCfg);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE,
-                    "[Database] MySQL connection failed — falling back to SQLite.", e);
+            plugin.getLogger().log(Level.SEVERE, "[Database] MySQL connection failed — falling back to SQLite.", e);
             dbType = "sqlite";
             loadSQLite();
         }
     }
-
-    // ── Shared ────────────────────────────────────────────────────────────────
 
     private void createTables() {
         Connection conn = getConnection();
@@ -136,11 +122,6 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Returns a live connection.
-     * MySQL  → borrowed from HikariCP pool (MUST be released via releaseConnection).
-     * SQLite → single persistent connection (releaseConnection is a no-op).
-     */
     public Connection getConnection() {
         if (dbType.equals("mysql") && hikariDataSource != null) {
             try {
@@ -150,7 +131,6 @@ public class DatabaseManager {
                 return null;
             }
         }
-        // SQLite
         try {
             if (sqliteConnection == null || sqliteConnection.isClosed()) {
                 loadSQLite();
@@ -162,10 +142,6 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Release a connection.
-     * MySQL: closes (returns to pool). SQLite: no-op.
-     */
     public void releaseConnection(Connection conn) {
         if (conn == null) return;
         if (dbType.equals("mysql")) {

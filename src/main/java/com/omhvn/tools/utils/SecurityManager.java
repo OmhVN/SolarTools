@@ -10,8 +10,6 @@ public class SecurityManager {
       this.plugin = plugin;
    }
 
-   // Obfuscated repackage prefix set by ProGuard (-repackageclasses in proguard.pro).
-   // Internal classes are moved here after obfuscation and must be treated as trusted.
    private static final String OBFUSCATED_PREFIX =
          "decodenodecode.solartools.nothingtoseehere.stoptryingtofigurethisout" +
          ".youarewastingyourtime.seriouslythereisnothinghidden.keepgoingforward" +

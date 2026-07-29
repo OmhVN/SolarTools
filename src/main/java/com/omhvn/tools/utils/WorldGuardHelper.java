@@ -66,13 +66,10 @@ public class WorldGuardHelper {
             ApplicableRegionSet fromSet = manager.getApplicableRegions(fromVec);
             ApplicableRegionSet toSet = manager.getApplicableRegions(toVec);
 
-            // If destination block has no regions, flow is always allowed (wild/unprotected area)
             if (toSet.size() == 0) return true;
 
-            // If destination block is protected, but source has no regions, block flow
             if (fromSet.size() == 0) return false;
 
-            // If destination has regions, verify source is inside all of them
             for (ProtectedRegion toReg : toSet) {
                 if (!fromSet.getRegions().contains(toReg)) {
                     return false;

@@ -20,7 +20,6 @@ public class ToolGuiCommand implements CommandExecutor {
     private final SolarTool plugin;
     public static final String GUI_TITLE = "§8ѕᴏʟᴀʀ ᴛᴏᴏʟѕ";
 
-    // Preset options in Small Caps (non-bold)
     public static final String[] TIME_PRESETS_LORE = {"ᴄᴏɴғɪɢ ᴅᴇғᴀᴜʟᴛ", "1ʜ", "6ʜ", "12ʜ", "1ᴅ", "3ᴅ", "7ᴅ", "30ᴅ"};
     public static final long[] TIME_PRESETS_MINUTES = {-1, 60, 360, 720, 1440, 4320, 10080, 43200};
 
@@ -91,7 +90,6 @@ public class ToolGuiCommand implements CommandExecutor {
     public void openGui(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, GUI_TITLE);
 
-        // Fill background with gray glass panes
         ItemStack border = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta borderMeta = border.getItemMeta();
         if (borderMeta != null) {
@@ -103,7 +101,6 @@ public class ToolGuiCommand implements CommandExecutor {
             inv.setItem(i, border);
         }
 
-        // Add tools to the middle row (slots 10 to 16)
         inv.setItem(10, plugin.getToolManager().createTool("drill"));
         inv.setItem(11, plugin.getToolManager().createTool("treechopper"));
         inv.setItem(12, plugin.getToolManager().createTool("shovel"));
@@ -122,7 +119,6 @@ public class ToolGuiCommand implements CommandExecutor {
         UUID uuid = player.getUniqueId();
         String mode = getPlayerMode(uuid);
 
-        // Slot 20: Mode toggle button
         ItemStack modeBtn = new ItemStack("TIME".equalsIgnoreCase(mode) ? Material.CLOCK : Material.REPEATER);
         ItemMeta modeMeta = modeBtn.getItemMeta();
         if (modeMeta != null) {
@@ -135,7 +131,6 @@ public class ToolGuiCommand implements CommandExecutor {
         }
         inv.setItem(20, modeBtn);
 
-        // Slot 24: Value selector button
         ItemStack valBtn = new ItemStack(Material.EMERALD);
         ItemMeta valMeta = valBtn.getItemMeta();
         if (valMeta != null) {
