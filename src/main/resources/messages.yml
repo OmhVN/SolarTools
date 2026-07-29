@@ -1,0 +1,44 @@
+prefix: "&8[&x&a&5&0&3&f&cSolarTool&8] &r"
+
+no-permission: "&cBạn không có quyền thực hiện lệnh này!"
+
+command:
+  give:
+    usage: "&eUsage: /givetools <tool> <player> [amount] [duration|uses]"
+    available-tools: "&eAvailable tools: &f{tools}"
+    invalid-tool: "&cCông cụ không hợp lệ! Các công cụ có sẵn: &f{tools}"
+    player-not-found: "&cKhông tìm thấy người chơi: &f{player}"
+    invalid-amount: "&cSố lượng không hợp lệ: &f{amount}&c. Vui lòng nhập một số nguyên dương."
+    invalid-duration: "&cThời gian không hợp lệ! Ví dụ: 7d, 12h, 30m, 60s"
+    invalid-uses: "&cSố lượt sử dụng không hợp lệ! Ví dụ: 500u, uses:100"
+    success-sender: "&aĐã trao &f{amount}x {tool} &acho &f{player}&a!"
+    success-receiver: "&aBạn đã nhận được &f{amount}x {tool}&a!"
+  reload:
+    usage: "&eUsage: /solartool reload"
+    success: "&aPlugin đã được tải lại thành công!"
+    error: "&cTải lại thất bại! &7({error})"
+
+time:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+  broken: "Broken"
+
+lore:
+  self-destruct-text: "§8Tự Hủy:"
+  self-destruct-prefix: "&f"
+  uses-remaining-text: "§8Còn lại:"
+
+tool:
+  expired: "&cCông cụ này đã hết hạn và bị xóa!"
+  received: "&aBạn đã nhận được công cụ từ GUI!"
+  uses-depleted: "&cCông cụ đã hết lượt sử dụng và bị xóa!"
+
+blacklist:
+  world-blocked: "&cCông cụ này không thể sử dụng trong thế giới hiện tại!"
+
+worldguard:
+  no-build: "&cBạn không có quyền sử dụng công cụ trong khu vực được bảo vệ này!"
+
+

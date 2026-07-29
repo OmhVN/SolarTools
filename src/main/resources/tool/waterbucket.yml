@@ -1,0 +1,14 @@
+# ── Cấu hình hiển thị & thuộc tính của WaterBucket ────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ᴡᴀᴛᴇʀ ʙᴜᴄᴋᴇᴛ"
+enchantment-text: "§7Đặt nước xa tối đa 27 khối"
+duration: 4320
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 500
+
+enchantments:
+  unbreaking: 3
+  mending: 1
+  aqua_affinity: 1

@@ -1,0 +1,62 @@
+# ── Cấu hình hiển thị & thuộc tính của Drill ──────────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ᴅʀɪʟʟ"
+enchantment-text: "§7Phá vùng khối mỗi lần đào"
+duration: 4320  # Thời gian sử dụng tính bằng PHÚT (4320 = 3 ngày)
+size: 3         # Kích thước mặt phẳng đào (3 = 3x3)
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 500
+
+# Cấu hình enchantment áp lên tool khi tạo ra
+enchantments:
+  efficiency: 5
+  unbreaking: 3
+  mending: 1
+  fortune: 3
+  silk_touch: 1
+
+# Các khối cho phép Drill phá vùng diện rộng
+breakable-blocks:
+  - STONE
+  - COBBLESTONE
+  - GRANITE
+  - DIORITE
+  - ANDESITE
+  - DEEPSLATE
+  - COBBLED_DEEPSLATE
+  - TUFF
+  - COAL_ORE
+  - IRON_ORE
+  - COPPER_ORE
+  - GOLD_ORE
+  - REDSTONE_ORE
+  - EMERALD_ORE
+  - LAPIS_ORE
+  - DIAMOND_ORE
+  - DEEPSLATE_COAL_ORE
+  - DEEPSLATE_IRON_ORE
+  - DEEPSLATE_COPPER_ORE
+  - DEEPSLATE_GOLD_ORE
+  - DEEPSLATE_REDSTONE_ORE
+  - DEEPSLATE_EMERALD_ORE
+  - DEEPSLATE_LAPIS_ORE
+  - DEEPSLATE_DIAMOND_ORE
+  - NETHER_GOLD_ORE
+  - NETHER_QUARTZ_ORE
+  - ANCIENT_DEBRIS
+  - NETHERRACK
+  - BASALT
+  - SMOOTH_BASALT
+  - BLACKSTONE
+  - SANDSTONE
+  - RED_SANDSTONE
+  - CALCITE
+  - DRIPSTONE_BLOCK
+  - POINTED_DRIPSTONE
+  - AMETHYST_BLOCK
+  - BUDDING_AMETHYST
+  - RAW_IRON_BLOCK
+  - RAW_COPPER_BLOCK
+  - RAW_GOLD_BLOCK

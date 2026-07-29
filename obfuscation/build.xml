@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SolarWorth-Obfuscation" default="yguard" basedir="..">
+
+    <property name="version"    value="1.3-R01"/>
+    <property name="input.jar"  value="${basedir}/target/SolarWorth-${version}.jar"/>
+    <property name="output.jar" value="${basedir}/obfuscation/output/SolarWorth-yguard.jar"/>
+    <property name="libs.dir"   value="${basedir}/obfuscation/libs"/>
+    <property name="output.dir" value="${basedir}/obfuscation/output"/>
+
+    <path id="yguard.classpath">
+        <pathelement location="${libs.dir}/yguard.jar"/>
+        <pathelement location="${libs.dir}/asm.jar"/>
+        <pathelement location="${libs.dir}/asm-commons.jar"/>
+        <pathelement location="${libs.dir}/asm-tree.jar"/>
+        <pathelement location="${libs.dir}/asm-analysis.jar"/>
+    </path>
+
+    <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask">
+        <classpath refid="yguard.classpath"/>
+    </taskdef>
+
+    <target name="init">
+        <mkdir dir="${output.dir}"/>
+    </target>
+
+    <target name="yguard" depends="init" description="Apply yGuard obfuscation">
+        <echo message="Applying yGuard obfuscation to ${input.jar}"/>
+
+        <yguard>
+            <inoutpair in="${input.jar}" out="${output.jar}"/>
+
+            <rename mainclass="org.omhvn.solarworth.SolarWorth"
+                    logfile="${output.dir}/yguard-rename.log"
+                    replaceClassNameStrings="true">
+
+                <property name="naming-scheme"       value="small"/>
+                <property name="language-conformity" value="compatible"/>
+                <property name="overload-enabled"    value="true"/>
+                <property name="scramble"            value="true"/>
+
+                <keep>
+
+                    <class classes="public" methods="none" fields="none">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.**"/>
+                        </patternset>
+                    </class>
+
+                    <method name="void onLoad()"    class="org.omhvn.solarworth.SolarWorth"/>
+                    <method name="void onEnable()"  class="org.omhvn.solarworth.SolarWorth"/>
+                    <method name="void onDisable()" class="org.omhvn.solarworth.SolarWorth"/>
+
+                    <class classes="public" methods="public" fields="none">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.SolarWorth"/>
+                        </patternset>
+                    </class>
+
+                    <method name="boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.SellCommand"/>
+                    <method name="boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.WorthCommand"/>
+                    <method name="boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.SellHistoryCommand"/>
+                    <method name="boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.ToggleWorthCommand"/>
+                    <method name="boolean onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.GiveSellAxeCommand"/>
+                    <method name="java.util.List onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])"
+                            class="org.omhvn.solarworth.commands.GiveSellAxeCommand"/>
+
+                    <class classes="public" methods="public" fields="none">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.nms.PacketListener"/>
+                            <include name="org.omhvn.solarworth.listeners.WorthLoreListener"/>
+                            <include name="org.omhvn.solarworth.listeners.SellAxeListener"/>
+                            <include name="org.omhvn.solarworth.gui.SellGUI$InventoryListener"/>
+                            <include name="org.omhvn.solarworth.gui.WorthGUI$WorthGUIListener"/>
+                            <include name="org.omhvn.solarworth.gui.HistoryGUI$HistoryGUIListener"/>
+                            <include name="org.omhvn.solarworth.gui.CategoryProgressGUI$CategoryProgressListener"/>
+                        </patternset>
+                    </class>
+
+                    <class classes="public" methods="public" fields="none">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.managers.DatabaseManager"/>
+                        </patternset>
+                    </class>
+
+                    <class classes="public" methods="public" fields="none">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.placeholders.SolarWorthPlaceholder"/>
+                        </patternset>
+                    </class>
+
+                    <class classes="private" methods="private" fields="private">
+                        <patternset>
+                            <include name="org.omhvn.solarworth.libs.**"/>
+                            <include name="com.github.retrooper.**"/>
+                            <include name="io.github.retrooper.**"/>
+                            <include name="org.sqlite.**"/>
+                            <include name="org.slf4j.**"/>
+                            <include name="org.intellij.**"/>
+                            <include name="org.jetbrains.**"/>
+                            <include name="com.zaxxer.**"/>
+                            <include name="com.tcoded.**"/>
+                            <include name="net.kyori.**"/>
+                        </patternset>
+                    </class>
+
+                </keep>
+            </rename>
+        </yguard>
+
+        <echo message="yGuard obfuscation complete: ${output.jar}"/>
+    </target>
+
+    <target name="clean" description="Clean output directory">
+        <delete dir="${output.dir}"/>
+    </target>
+
+</project>

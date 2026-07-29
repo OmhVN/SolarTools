@@ -1,0 +1,16 @@
+# ── Database Configuration ────────────────────────────────────────────────────
+# Available databases:
+#  - sqlite
+#  - mysql
+#
+# If type is null or unrecognized, it will use sqlite by default
+type: "sqlite"
+
+mysql:
+  host: localhost
+  port: 3306
+  database: ""
+  user: ""
+  password: ''
+  max-pool: 15
+  use-ssl: false

@@ -1,0 +1,19 @@
+# ── Cấu hình hiển thị & thuộc tính của Rocket (Pháo hoa vô hạn) ────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ʀᴏᴄᴋᴇᴛ"
+enchantment-text: "§7Pháo hoa đẩy Elytra vô hạn (Dùng đến khi hết hạn)"
+duration: 4320  # Thời gian sử dụng tính bằng PHÚT (4320 = 3 ngày)
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 1000
+
+# Sức mạnh đẩy pháo hoa (1, 2, hoặc 3)
+power: 2
+
+# Cooldown giữa các lần bứt tốc (tính bằng mili-giây, 0 = đặt/bứt tốc nhanh không cooldown)
+cooldown-ms: 0
+
+enchantments:
+  unbreaking: 3
+  mending: 1

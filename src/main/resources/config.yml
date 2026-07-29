@@ -1,0 +1,43 @@
+# ── 1. Unbreakable Blocks ────────────────────────────────────────────────────
+# Danh sách các block không thể bị phá bởi tool (dù tool có hiệu ứng vùng).
+# Thêm tên Material (chữ HOA) vào list để bảo vệ block đó.
+# Supports: Tất cả Material hợp lệ của Minecraft 1.21+.
+UnBreakable:
+  - BEDROCK
+  - BARRIER
+  - END_PORTAL_FRAME
+  - END_PORTAL
+  - END_GATEWAY
+  - NETHER_PORTAL
+  - SPAWNER
+  - OBSIDIAN
+  - CHEST
+
+# ── 2. Soil Blocks ────────────────────────────────────────────────────────────
+# Danh sách block đất mà Shovel và MultiTool nhận diện để phá vùng.
+# Thêm/bớt Material (chữ HOA) tùy theo server của bạn.
+SoilBlocks:
+  - DIRT
+  - GRASS_BLOCK
+  - SAND
+  - RED_SAND
+  - SOUL_SAND
+  - GRAVEL
+  - CLAY
+  - FARMLAND
+  - MYCELIUM
+  - PODZOL
+  - SOUL_SOIL
+  - COARSE_DIRT
+
+# ── 3. Blacklist Settings ────────────────────────────────────────────────────
+# Danh sách world mà tool KHÔNG hoạt động.
+# Tên world phân biệt chữ hoa/thường (so sánh toLowerCase).
+# Thêm tên world đúng như trong server.properties / bukkit.yml.
+blacklist:
+  null-worlds: []
+  worlds:
+    - world_nether
+    - world_the_end
+
+version: 1

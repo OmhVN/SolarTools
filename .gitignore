@@ -1,0 +1,21 @@
+# Build & Output directories
+target/
+obfuscation/output/
+obfuscation/libs/*.jar
+!obfuscation/libs/.gitkeep
+obfuscation/mappings/
+obfuscation/mappings-cloud/
+obfuscation/*.txt
+obfuscation/*.bak
+
+# Excluded specific files per user request
+dev_log_discord.md
+dependency-reduced-pom.xml
+
+# IDE & OS files
+.idea/
+.vscode/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,39 @@
+# ── Cấu hình hiển thị & thuộc tính của TreeChopper ────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ᴛʀᴇᴇ ᴄʜᴏᴘᴘᴇʀ"
+enchantment-text: "§7Chặt toàn bộ cây ngay lập tức"
+duration: 4320
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 500
+
+enchantments:
+  efficiency: 5
+  unbreaking: 3
+  mending: 1
+  fortune: 3
+
+# Danh sách các loại khối LOG được TreeChopper chặt theo chuỗi.
+breakable-blocks:
+  - OAK_LOG
+  - SPRUCE_LOG
+  - BIRCH_LOG
+  - JUNGLE_LOG
+  - ACACIA_LOG
+  - DARK_OAK_LOG
+  - MANGROVE_LOG
+  - CHERRY_LOG
+  - BAMBOO_BLOCK
+  - CRIMSON_STEM
+  - WARPED_STEM
+  - STRIPPED_OAK_LOG
+  - STRIPPED_SPRUCE_LOG
+  - STRIPPED_BIRCH_LOG
+  - STRIPPED_JUNGLE_LOG
+  - STRIPPED_ACACIA_LOG
+  - STRIPPED_DARK_OAK_LOG
+  - STRIPPED_MANGROVE_LOG
+  - STRIPPED_CHERRY_LOG
+  - STRIPPED_CRIMSON_STEM
+  - STRIPPED_WARPED_STEM

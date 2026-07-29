@@ -1,0 +1,19 @@
+# ── Cấu hình hiển thị & thuộc tính của MultiTool ──────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ᴍᴜʟᴛɪᴛᴏᴏʟ"
+enchantment-text: "§74 Dụng cụ trong một vật phẩm!"
+duration: 10080
+size: 3
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 1000
+
+enchantments:
+  efficiency: 5
+  unbreaking: 3
+  mending: 1
+  fortune: 3
+  silk_touch: 1
+
+breakable-blocks: []

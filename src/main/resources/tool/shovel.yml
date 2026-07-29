@@ -1,0 +1,20 @@
+# ── Cấu hình hiển thị & thuộc tính của Shovel ──────────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ꜱʜᴏᴠᴇʟ"
+enchantment-text: "§7Phá vùng khối mỗi lần đào"
+duration: 4320
+size: 3
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 500
+
+enchantments:
+  efficiency: 5
+  unbreaking: 3
+  mending: 1
+  fortune: 3
+  silk_touch: 1
+
+# Các khối cho phép Shovel phá vùng diện rộng (để trống để tự động dùng SoilBlocks trong config.yml)
+breakable-blocks: []

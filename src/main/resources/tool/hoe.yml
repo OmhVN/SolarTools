@@ -1,0 +1,19 @@
+# ── Cấu hình hiển thị & thuộc tính của Hoe ─────────────────────────────────
+display-name: "&x&a&5&0&3&f&cᴀᴍᴇᴛʜʏѕᴛ ʜᴏᴇ"
+enchantment-text: "§7Cuốc vùng khối mỗi lần sử dụng"
+duration: 4320
+size: 3
+
+# Chế độ hết hạn: "time" (theo thời gian) hoặc "uses" (theo số lần sử dụng)
+expiration-mode: time
+# Số lần sử dụng tối đa (chỉ áp dụng khi expiration-mode = uses)
+max-uses: 500
+
+enchantments:
+  efficiency: 5
+  unbreaking: 3
+  mending: 1
+  fortune: 3
+
+# Các khối cho phép Hoe tilled/hoable (để trống để nhận diện theo mặc định)
+breakable-blocks: []
