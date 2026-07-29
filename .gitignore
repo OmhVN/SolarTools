@@ -1,3 +1,13 @@
+# Build & Output directories
+target/
+obfuscation/
+build-obfuscated.ps1
+build-obfuscated.sh
+
+# Excluded specific files per user request
+dev_log_discord.md
+dependency-reduced-pom.xml
+
 # IDE & OS files
 .idea/
 .vscode/
