@@ -1,7 +1,6 @@
 package com.omhvn.tools.utils;
 
 import com.omhvn.tools.SolarTool;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,17 +17,21 @@ public class BlacklistManager {
 
     public void reload() {
         blacklistedWorlds.clear();
-
         List<String> worlds = plugin.getConfig().getStringList("blacklist.worlds");
-        for (String w : worlds) {
-            blacklistedWorlds.add(w.toLowerCase());
+        if (worlds != null) {
+            for (String w : worlds) {
+                if (w != null && !w.isBlank()) {
+                    blacklistedWorlds.add(w.trim().toLowerCase());
+                }
+            }
         }
-
         plugin.getLogger().info("[SolarTool] Blacklist loaded: " + blacklistedWorlds.size() + " world(s).");
     }
 
-    
     public boolean isWorldBlacklisted(String worldName) {
-        return blacklistedWorlds.contains(worldName.toLowerCase());
+        if (worldName == null || worldName.isBlank()) {
+            return false;
+        }
+        return blacklistedWorlds.contains(worldName.trim().toLowerCase());
     }
 }

@@ -339,13 +339,14 @@ public class ToolListener implements Listener {
       if (!plugin.getToolManager().isCustomTool(item)) return;
 
       plugin.getToolManager().updateExpirationDisplay(item);
-      boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
-
-      if (!bypass && plugin.getBlacklistManager().isWorldBlacklisted(player.getWorld().getName())) {
+      boolean bypassBlacklist = player.hasPermission("solartools.bypass.blacklist") || player.hasPermission("solartool.bypass.blacklist");
+      if (!bypassBlacklist && plugin.getBlacklistManager().isWorldBlacklisted(player.getWorld().getName())) {
          plugin.getMessageManager().sendMessage(player, "blacklist.world-blocked");
          event.setCancelled(true);
          return;
       }
+
+      boolean bypass = player.isOp() || player.hasPermission("solartools.bypass") || player.hasPermission("solartool.bypass");
       if (!bypass && !plugin.getWorldGuardHelper().canBuild(player, event.getBlock().getLocation())) {
          plugin.getMessageManager().sendMessage(player, "worldguard.no-build");
          event.setCancelled(true);
@@ -427,13 +428,14 @@ public class ToolListener implements Listener {
       }
 
       plugin.getToolManager().updateExpirationDisplay(item);
-      boolean bypass = player.isOp() || player.hasPermission("solartool.bypass");
-
-      if (!bypass && plugin.getBlacklistManager().isWorldBlacklisted(player.getWorld().getName())) {
+      boolean bypassBlacklist = player.hasPermission("solartools.bypass.blacklist") || player.hasPermission("solartool.bypass.blacklist");
+      if (!bypassBlacklist && plugin.getBlacklistManager().isWorldBlacklisted(player.getWorld().getName())) {
          plugin.getMessageManager().sendMessage(player, "blacklist.world-blocked");
          event.setCancelled(true);
          return;
       }
+
+      boolean bypass = player.isOp() || player.hasPermission("solartools.bypass") || player.hasPermission("solartool.bypass");
       if (!bypass && event.getClickedBlock() != null
             && !plugin.getWorldGuardHelper().canBuild(player, event.getClickedBlock().getLocation())) {
          plugin.getMessageManager().sendMessage(player, "worldguard.no-build");
